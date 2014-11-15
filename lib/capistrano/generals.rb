@@ -1,7 +1,2 @@
-require "capistrano/generals/version"
-
-module Capistrano
-  module Generals
-    # Your code goes here...
-  end
-end
+# Load all the rake files
+Dir[File.dirname(__FILE__) + '/tasks/**/*.rake'].each {|file| load file }
