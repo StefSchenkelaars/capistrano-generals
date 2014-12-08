@@ -11,13 +11,13 @@ namespace :git do
           abort "Local git repository has uncommitted changes"
         elsif !ENV["IGNORE_DEPLOY_RB"]
           # This is used for testing changes to this script without committing them first
-          abort "Local git repository has uncommitted changes (set IGNORE_DEPLOY_RB=1 to ignore changes to deploy.rb)"
+          abort red "Local git repository has uncommitted changes (set IGNORE_DEPLOY_RB=1 to ignore changes to deploy.rb)"
         end
       end
 
       # Push selected branch to github
       unless system "git push #{repo_url} #{fetch(:branch)} #{'-f' if ENV['FORCE']}"
-        abort red("Failed to push changes to #{fetch(:repo_url)} (set FORCE=true to force push to github)")
+        abort red "Failed to push changes to #{fetch(:repo_url)} (set FORCE=true to force push to github)"
       end
     end
   end
