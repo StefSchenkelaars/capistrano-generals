@@ -1,26 +1,55 @@
 # Capistrano::Generals
 
-TODO: Write a gem description
+Capistrano tasks that are used quite often.
+Push your code to git, upload stage specific config files.
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Add this to your application's `Gemfile`:
 
 ```ruby
-gem 'capistrano-generals'
+group :development do
+  gem 'capistrano', '~> 3.2.1'
+  gem 'capistrano-unicorn-nginx', '~> 3.1.0'
+end
 ```
 
 And then execute:
 
-    $ bundle
+    $ bundle install
 
-Or install it yourself as:
+And add this to the `Capfile`:
 
-    $ gem install capistrano-generals
+```ruby
+require 'capistrano/generals'
+```
 
 ## Usage
+When the generals package is added to the `Capfile`, the user can specify the required tasks.
+In your `config/deploy.rb` you can add the taks by adding them to the deploy namespace like this:
 
-TODO: Write usage instructions here
+```ruby
+namespace :deploy do
+  before :deploy, 'git:push'
+  before :deploy, 'deploy:symlink:upload_linked_files'
+end
+```
+
+### Git push
+This first checks if there are no local changes that has not been committed.
+If all changes are committed, they are pushed.
+
+Options:
+
+* IGNORE_DEPLOY_RB=true: This ignores changes in deploy.rb, for testing only!
+* FORCE=true: Force push changes
+
+### Upload linked files
+This uploads the linked files. It first checks for a stage specific file so for
+example you want to upload `database.yml` to the `staging` environment,
+the system first searches for `database.staging.yml` and if it cannot find that
+it will fall back to the original.
+
 
 ## Contributing
 
