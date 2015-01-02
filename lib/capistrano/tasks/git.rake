@@ -17,7 +17,7 @@ namespace :git do
 
       # Push selected branch to github
       unless system "git push #{repo_url} #{fetch(:branch)} #{'-f' if ENV['FORCE']}"
-        abort red "Failed to push changes to #{fetch(:repo_url)} (set FORCE=true to force push to github)"
+        abort red "Failed to push changes to #{fetch(:repo_url)} (set FORCE=true to force push)"
       end
     end
   end
