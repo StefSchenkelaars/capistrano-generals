@@ -12,26 +12,16 @@ namespace :deploy do
       # Loop through all linked files
       fetch(:linked_files).each do |file_name|
 
-        # Default local_file_name is stage specific.
-        local_file_name = get_config_file(file_name, fetch(:stage).to_s)
-
         # Initialize variable outsize run_locally block to make sure it can be
         # passed into the remote block
         local_cksum = nil
+        local_file_name = ''
 
         # Get file information
         run_locally do
 
-          # Check if file exists, else select default file
-          # If default file does not exists abort.
-          unless File.exists? local_file_name
-            unless File.exists? file_name
-              abort red "Cannot find file #{local_file_name} or #{file_name} on local machine"
-            end
-            # The default file does exists, selecting that one
-            warn "Cannot find stage specific config file #{local_file_name} on local machine, taking default #{file_name}"
-            local_file_name = file_name
-          end
+          # Try to find stage specific file, otherwice select default
+          local_file_name = get_config_file(file_name, fetch(:stage).to_s)
 
           # Get local file info
           local_cksum = capture :cksum, local_file_name
