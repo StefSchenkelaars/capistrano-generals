@@ -3,6 +3,7 @@ namespace :load do
     # Application runner
     set :use_puma, false
     set :use_unicorn, false
+    set :use_sidekiq, false
 
     # Application settings
     set :app_config_name, -> { "#{fetch(:application)}_#{fetch(:stage)}" }
@@ -35,6 +36,12 @@ namespace :load do
     set :unicorn_user, -> { fetch(:deploy_user) }
     set :unicorn_env, ''
     set :unicorn_app_env, -> { fetch(:rails_env) || fetch(:rack_env) || fetch(:stage) }
+
+    # General Sidekiq settings
+    set :sidekiq_workers, 3
+    set :sidekiq_user, -> { fetch(:deploy_user) }
+    set :sidekiq_pid, -> { sidekiq_default_pid_file }
+    set :sidekiq_log, 'sidekiq.log'
 
     # Capistrano settings
     set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids')

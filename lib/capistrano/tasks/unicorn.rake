@@ -19,6 +19,7 @@ namespace :unicorn do
       sudo 'update-rc.d', '-f', unicorn_service, 'defaults'
     end
   end
+  before :setup_initializer, :capistrano_config_test
 
   desc 'Setup unicorn app configuration'
   task :setup_app_config do
@@ -46,8 +47,10 @@ namespace :unicorn do
 
   desc 'Restart unicorn'
   task :restart do
-    invoke 'unicorn:stop'
-    invoke 'unicorn:start'
+    if fetch(:use_unicorn)
+      invoke 'unicorn:stop'
+      invoke 'unicorn:start'
+    end
   end
 
 end
