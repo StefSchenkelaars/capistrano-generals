@@ -23,14 +23,14 @@ namespace :nginx do
   desc 'Start nginx'
   task :start do
     on roles :web do
-      execute 'sudo /etc/init.d/nginx start'
+      execute nginx_initd_file, 'start'
     end
   end
 
   desc 'Stop nginx'
   task :stop do
     on roles :web do
-      execute 'sudo /etc/init.d/nginx stop'
+      execute nginx_initd_file, 'stop'
       sleep 3
     end
   end
@@ -38,14 +38,14 @@ namespace :nginx do
   desc 'Restart nginx'
   task :restart do
     on roles :web do
-      execute 'sudo /etc/init.d/nginx restart'
+      sudo nginx_initd_file, 'restart'
     end
   end
 
   desc 'Reload nginx'
   task :reload do
     on roles :web do
-      execute 'sudo /etc/init.d/nginx reload'
+      sudo nginx_initd_file, 'reload'
     end
   end
 

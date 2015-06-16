@@ -29,11 +29,6 @@ module Capistrano
       def unicorn_error_log_file
         unicorn_log_dir.join(fetch(:unicorn_error_log))
       end
-
-      #
-      # def unicorn_default_logrotate_config_file
-      #   "/etc/logrotate.d/#{fetch(:unicorn_service)}"
-      # end
     end
   end
 end
