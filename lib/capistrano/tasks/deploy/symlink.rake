@@ -6,7 +6,7 @@ namespace :deploy do
 
       # Abort if no linked files found
       if fetch(:linked_files).nil?
-        abort red "No linked files specified. Remove the upload_linked_files task or add linked_files."
+        abort red 'No linked files specified. Remove the upload_linked_files task or add linked_files.'
       end
 
       # Loop through all linked files
