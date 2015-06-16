@@ -6,12 +6,12 @@ namespace :git do
     # Use 'cap git:push IGNORE_DEPLOY_RB=1' to ignore changes to this file (for testing)
     run_locally do
       status = %x(git status --porcelain).chomp
-      if status != ""
+      if status != ''
         if status !~ %r{^[M ][M ] config/deploy.rb$}
-          abort "Local git repository has uncommitted changes"
-        elsif !ENV["IGNORE_DEPLOY_RB"]
+          abort 'Local git repository has uncommitted changes'
+        elsif !ENV['IGNORE_DEPLOY_RB']
           # This is used for testing changes to this script without committing them first
-          abort red "Local git repository has uncommitted changes (set IGNORE_DEPLOY_RB=1 to ignore changes to deploy.rb)"
+          abort red 'Local git repository has uncommitted changes (set IGNORE_DEPLOY_RB=1 to ignore changes to deploy.rb)'
         end
       end
 
