@@ -76,8 +76,12 @@ This will upgrade the unicorn workers and restart nginx.
 
 ## Contributing
 
-1. Fork it ( https://github.com/[my-github-username]/capistrano-generals/fork )
+1. Fork it ( https://github.com/StefSchenkelaars/capistrano-generals/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
+
+
+## Disclaimer
+With ideas from: https://github.com/capistrano-plugins/capistrano-unicorn-nginx
