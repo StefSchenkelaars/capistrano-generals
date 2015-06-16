@@ -1,6 +1,11 @@
 module Capistrano
   module Generals
     module Helpers
+
+      def bundle_unicorn(*args)
+        SSHKit::Command.new(:bundle, :exec, :unicorn, args).to_command
+      end
+
       def red text
         "\033[31m#{text}\033[0m"
       end
@@ -44,6 +49,7 @@ module Capistrano
       def sudo_upload!(from, to)
         filename = File.basename(to)
         to_dir = File.dirname(to)
+        execute :mkdir, '-pv', to_dir
         tmp_file = "#{fetch(:tmp_dir)}/#{filename}"
         upload! from, tmp_file
         sudo :mv, tmp_file, to_dir

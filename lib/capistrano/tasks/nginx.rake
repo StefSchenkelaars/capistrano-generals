@@ -1,33 +1,6 @@
 require 'capistrano/dsl/nginx_paths'
 include Capistrano::DSL::NginxPaths
 
-namespace :load do
-  task :defaults do
-    # Application runner
-    set :use_puma, false
-    set :use_unicorn, false
-
-    # General Nginx settings
-    set :server_domain, -> { fetch(:server_domain) }
-    set :nginx_config_name, -> { "#{fetch(:application)}_#{fetch(:stage)}" }
-    set :nginx_location, '/etc/nginx'
-    set :nginx_redirect_www, true
-    set :nginx_fail_timeout, 0
-
-    # SSL Settings
-    set :nginx_use_ssl, false
-    set :nginx_ssl_stapling, true
-    set :nginx_ssl_ciphers, 'AES128+EECDH:AES128+EDH:!aNULL'
-    set :nginx_ssl_protocols, 'TLSv1 TLSv1.1 TLSv1.2'
-    set :nginx_ssl_session_cache, 'shared:SSL:10m'
-    set :nginx_ssl_cert, -> { nginx_default_ssl_cert_file_name }
-    set :nginx_ssl_cert_key, -> { nginx_default_ssl_cert_key_file_name }
-    set :nginx_ssl_dhparam, -> { nginx_default_ssl_dhparam_file_name }
-    set :nginx_server_ciphers, false
-    set :nginx_server_ciphers_path, '/etc/ssl/certs/dhparam.pem'
-  end
-end
-
 namespace :nginx do
 
   desc 'Test capistrano config setup'
@@ -69,4 +42,20 @@ namespace :nginx do
     end
   end
 
+  desc 'Reload nginx'
+  task :reload do
+    on roles :web do
+      execute 'sudo /etc/init.d/nginx reload'
+    end
+  end
+
+end
+
+namespace :deploy do
+  after :publishing, 'nginx:reload'
+end
+
+desc 'Server setup tasks'
+task :setup do
+  invoke 'nginx:setup'
 end
