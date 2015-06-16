@@ -19,6 +19,7 @@ namespace :unicorn do
       sudo 'update-rc.d', '-f', unicorn_service, 'defaults'
     end
   end
+  before :setup_initializer, :capistrano_config_test
 
   desc 'Setup unicorn app configuration'
   task :setup_app_config do
@@ -53,7 +54,9 @@ namespace :unicorn do
 end
 
 namespace :deploy do
-  after :publishing, 'unicorn:restart'
+  if fetch(:use_unicorn)
+    after :publishing, 'unicorn:restart'
+  end
 end
 
 desc 'Server setup tasks'

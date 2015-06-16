@@ -32,15 +32,14 @@ In your `config/deploy.rb` you can add the taks by adding them to the deploy nam
 namespace :deploy do
   before :deploy,   'git:push'
   before :deploy,   'deploy:symlink:upload_linked_files'
-  after  :deploy,   'setup:symlink:unicorn'
-  after  :deploy,   'setup:symlink:nginx'
-  after  :deploy,   'setup:symlink:sidekiq'
-  after  :deploy,   'unicorn:restart'
-  after  :rollback, 'unicorn:restart'
-  after  :deploy,   'nginx:restart'
-  after  :rollback, 'nginx:restart'
-  after  :deploy,   'sidekiq:restart'
-  after  :rollback, 'sidekiq:restart'
+  before :deploy,   'setup'
+
+  # after  :deploy,   'unicorn:restart'
+  # after  :rollback, 'unicorn:restart'
+  # after  :deploy,   'nginx:restart'
+  # after  :rollback, 'nginx:restart'
+  # after  :deploy,   'sidekiq:restart'
+  # after  :rollback, 'sidekiq:restart'
 end
 ```
 
@@ -70,6 +69,9 @@ This uploads the linked files. It first checks for a stage specific file so for
 example you want to upload `database.yml` to the `staging` environment,
 the system first searches for `database.staging.yml` and if it cannot find that
 it will fall back to the original.
+
+### Setup
+TODO: Create docs. It creates config files and startup scripts for nginx, unicorn and sidekiq.
 
 ### Restart
 This will upgrade the unicorn workers and restart nginx.
