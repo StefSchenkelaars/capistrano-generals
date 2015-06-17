@@ -1,5 +1,7 @@
 require 'capistrano/dsl/nginx_paths'
 include Capistrano::DSL::NginxPaths
+require 'capistrano/dsl/ssl_paths'
+include Capistrano::DSL::SSLPaths
 
 namespace :nginx do
 

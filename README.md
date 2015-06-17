@@ -86,4 +86,6 @@ This will upgrade the unicorn workers and restart nginx.
 
 
 ## Disclaimer
-With ideas from: https://github.com/capistrano-plugins/capistrano-unicorn-nginx
+With ideas from:
+* https://github.com/capistrano-plugins/capistrano-unicorn-nginx
+* https://exceptiontrap.com/blog/11-create-and-install-ssl-certificates-with-ease-capistrano-recipe

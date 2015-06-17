@@ -43,8 +43,8 @@ server {
   # SSL Settings
   <% if fetch(:nginx_use_ssl) %>
   listen 443 ssl;
-  ssl_certificate <%= nginx_ssl_cert_file %>;
-  ssl_certificate_key <%= nginx_ssl_cert_key_file %>;
+  ssl_certificate <%= remote_ssl_cert_chained_file %>;
+  ssl_certificate_key <%= remote_ssl_cert_key_file %>;
 
   ssl_ciphers <%= fetch(:nginx_ssl_ciphers) %>;
   ssl_protocols <%= fetch(:nginx_ssl_protocols) %>;
@@ -57,9 +57,9 @@ server {
   resolver_timeout 10s;
   <% end %>
 
-  <% if fetch(:nginx_server_ciphers) %>
+  <% if fetch(:ssl_server_ciphers) %>
   ssl_prefer_server_ciphers on;
-  ssl_dhparam <%= nginx_ssl_dhparam_file %>;
+  ssl_dhparam <%= remote_ssl_dhparam_file %>;
   <% end %>
 
   <% else %>

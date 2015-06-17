@@ -14,17 +14,23 @@ namespace :load do
     set :nginx_redirect_www, true
     set :nginx_fail_timeout, 0
 
-    # SSL Settings
+    # Nginx ssl settings
     set :nginx_use_ssl, false
     set :nginx_ssl_stapling, true
     set :nginx_ssl_ciphers, 'AES128+EECDH:AES128+EDH:!aNULL'
     set :nginx_ssl_protocols, 'TLSv1 TLSv1.1 TLSv1.2'
     set :nginx_ssl_session_cache, 'shared:SSL:10m'
-    set :nginx_ssl_cert, -> { "#{fetch(:server_domain)}.crt" }
-    set :nginx_ssl_cert_key, -> { "#{fetch(:server_domain)}.key" }
-    set :nginx_ssl_dhparam, 'dhparam.pem'
-    set :nginx_server_ciphers, false
-    set :nginx_server_ciphers_path, '/etc/ssl/certs/dhparam.pem'
+
+    # SSL Settings
+    set :local_certs_folder, 'config/deploy/certs'
+    set :remote_certs_folder, '/etc/ssl'
+    set :ssl_csr, -> { "#{fetch(:server_domain)}.csr" }
+    set :ssl_cert, -> { "#{fetch(:server_domain)}.crt" }
+    set :ssl_cert_intermediate, -> { "#{fetch(:server_domain)}-intermediate.crt" }
+    set :ssl_cert_chain, -> { "#{fetch(:server_domain)}-chained.crt" }
+    set :ssl_cert_key, -> { "#{fetch(:server_domain)}.key" }
+    set :ssl_server_ciphers, false
+    set :ssl_dhparam, 'dhparam.pem'
 
     # General Unicorn settings
     set :unicorn_pid, -> { unicorn_default_pid_file } # shared_path/tmp/pids/unicorn.pid
