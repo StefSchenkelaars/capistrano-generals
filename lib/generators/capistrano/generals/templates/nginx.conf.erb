@@ -24,7 +24,7 @@ server {
 <% if fetch(:nginx_use_ssl) %>
 server {
   listen 80;
-  server_name <%= fetch(:server_domain) %>;
+  server_name <%= "*.#{fetch(:server_domain)}" if fetch(:nginx_respond_to_subdomains) %> <%= fetch(:server_domain) %>;
   rewrite ^(.*) https://$host$1 permanent;
 }
 <% end %>
@@ -32,7 +32,7 @@ server {
 #          Server
 ##############################
 server {
-  server_name <%= fetch(:server_domain) %>;
+  server_name <%= "*.#{fetch(:server_domain)}" if fetch(:nginx_respond_to_subdomains) %> <%= fetch(:server_domain) %>;
   root <%= current_path %>/public;
 
   client_max_body_size 4G;
@@ -40,11 +40,11 @@ server {
 
   error_page 500 502 504 /500.html;
 
-  # SSL Settings
   <% if fetch(:nginx_use_ssl) %>
+  # SSL Settings
   listen 443 ssl;
-  ssl_certificate <%= nginx_ssl_cert_file %>;
-  ssl_certificate_key <%= nginx_ssl_cert_key_file %>;
+  ssl_certificate <%= remote_ssl_cert_chained_file %>;
+  ssl_certificate_key <%= remote_ssl_cert_key_file %>;
 
   ssl_ciphers <%= fetch(:nginx_ssl_ciphers) %>;
   ssl_protocols <%= fetch(:nginx_ssl_protocols) %>;
@@ -57,14 +57,21 @@ server {
   resolver_timeout 10s;
   <% end %>
 
-  <% if fetch(:nginx_server_ciphers) %>
+  <% if fetch(:ssl_server_ciphers) %>
   ssl_prefer_server_ciphers on;
-  ssl_dhparam <%= nginx_ssl_dhparam_file %>;
+  ssl_dhparam <%= remote_ssl_dhparam_file %>;
   <% end %>
 
   <% else %>
   listen 80;
   <% end %>
+
+  <% if fetch(:ngingx_strict_transport_security) %>
+  add_header Strict-Transport-Security max-age=63072000;
+  add_header X-Content-Type-Options nosniff;
+  <% end %>
+  add_header X-Frame-Options <%= fetch(:nginx_x_frame_options) %>;
+
 
   <% # FILE HANDLING %>
   <% if fetch(:use_unicorn) %>
@@ -84,7 +91,7 @@ server {
   <% if fetch(:use_puma) %>
   try_files $uri/index.html $uri @puma_<%= fetch(:app_config_name) %>;
 
-  location @unicorn_<%= fetch(:app_config_name) %> {
+  location @puma_<%= fetch(:app_config_name) %> {
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header Host $http_host;
     proxy_redirect off;
@@ -92,7 +99,7 @@ server {
     proxy_set_header X-Forwarded-Proto https;
     <% end %>
     proxy_pass http://puma_<%= fetch(:app_config_name) %>;
-    }
+  }
   <% end %>
 
   location ~* ^/assets/ {

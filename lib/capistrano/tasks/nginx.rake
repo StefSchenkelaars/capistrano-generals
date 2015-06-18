@@ -1,5 +1,7 @@
 require 'capistrano/dsl/nginx_paths'
 include Capistrano::DSL::NginxPaths
+require 'capistrano/dsl/ssl_paths'
+include Capistrano::DSL::SSLPaths
 
 namespace :nginx do
 
@@ -52,7 +54,7 @@ namespace :nginx do
 end
 
 namespace :deploy do
-  after :publishing, 'nginx:reload'
+  after :publishing, 'nginx:restart'
 end
 
 desc 'Server setup tasks'

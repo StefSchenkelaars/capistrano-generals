@@ -30,12 +30,21 @@ namespace :unicorn do
   end
   before :setup_app_config, :capistrano_config_test
 
+  desc 'Setup unicorn'
+  task :setup do
+    if fetch :use_unicorn
+      invoke 'unicorn:setup_app_config'
+      invoke 'unicorn:setup_initializer'
+    end
+  end
+
   desc 'Start unicorn'
   task :start do
     on roles :app do
       sudo unicorn_initd_file, 'start'
     end
   end
+  before :start, :capistrano_config_test
 
   desc 'Stop unicorn'
   task :stop do
@@ -44,25 +53,29 @@ namespace :unicorn do
       sleep 3
     end
   end
+  before :stop, :capistrano_config_test
 
   desc 'Restart unicorn'
   task :restart do
     invoke 'unicorn:stop'
     invoke 'unicorn:start'
   end
+  before :restart, :capistrano_config_test
+
+  desc 'Restarts unicorn if puma enabled'
+  task :after_publishing do
+    if fetch :use_unicorn
+      invoke 'unicorn:restart'
+    end
+  end
 
 end
 
 namespace :deploy do
-  if fetch(:use_unicorn)
-    after :publishing, 'unicorn:restart'
-  end
+  after :publishing, 'unicorn:after_publishing'
 end
 
 desc 'Server setup tasks'
 task :setup do
-  if fetch(:use_unicorn)
-    invoke 'unicorn:setup_app_config'
-    invoke 'unicorn:setup_initializer'
-  end
+  invoke 'unicorn:setup'
 end

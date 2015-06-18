@@ -14,19 +14,6 @@ module Capistrano
         "#{fetch(:nginx_location)}/sites-enabled/#{fetch(:app_config_name)}"
       end
 
-      # ssl related files
-      def nginx_ssl_cert_file
-        "/etc/ssl/certs/#{fetch(:nginx_ssl_cert)}"
-      end
-
-      def nginx_ssl_cert_key_file
-        "/etc/ssl/private/#{fetch(:nginx_ssl_cert_key)}"
-      end
-
-      def nginx_ssl_dhparam_file
-        "/etc/ssl/certs/#{fetch(:nginx_ssl_dhparam)}"
-      end
-
     end
   end
 end
