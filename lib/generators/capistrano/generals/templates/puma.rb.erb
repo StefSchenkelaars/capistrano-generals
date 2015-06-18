@@ -4,6 +4,7 @@ bind "unix:///tmp/puma.<%= fetch(:app_config_name) %>.sock"
 
 threads <%= fetch(:puma_min_threads) %>, <%= fetch(:puma_max_threads) %>
 workers <%= fetch(:puma_workers) %>
+pidfile "<%= fetch(:puma_pid) %>"
 
 <% if fetch(:puma_preload_app) %>
 preload_app!
