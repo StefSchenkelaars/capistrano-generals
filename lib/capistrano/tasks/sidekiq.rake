@@ -49,6 +49,17 @@ namespace :sidekiq do
   end
   before :restart, :capistrano_config_test
 
+  desc 'Restarts sidekiq if sidekiq enabled'
+  task :after_publishing do
+    if fetch :use_sidekiq
+      invoke 'sidekiq:restart'
+    end
+  end
+
+end
+
+namespace :deploy do
+  after :publishing, 'sidekiq:after_publishing'
 end
 
 desc 'Server setup tasks'
