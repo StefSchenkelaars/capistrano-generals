@@ -1,0 +1,20 @@
+<%= template_to_s('_head').to_s %>
+bind "unix:///tmp/puma.<%= fetch(:app_config_name) %>.sock"
+
+threads <%= fetch(:puma_min_threads) %>, <%= fetch(:puma_max_threads) %>
+workers <%= fetch(:puma_workers) %>
+
+<% if fetch(:puma_preload_app) %>
+preload_app!
+<% end %>
+
+worker_timeout <%= fetch(:puma_worker_timeout) %>
+
+on_worker_boot do
+  if defined? ActiveSupport
+  ActiveSupport.on_load(:active_record) do
+    if defined? ActiveRecord::Base
+      ActiveRecord::Base.establish_connection
+    end
+  end
+end
