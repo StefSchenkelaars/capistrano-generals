@@ -20,7 +20,7 @@ namespace :load do
     # Nginx ssl settings
     set :nginx_use_ssl, false
     set :nginx_ssl_stapling, true
-    set :nginx_ssl_ciphers, 'AES128+EECDH:AES128+EDH:!aNULL'
+    set :nginx_ssl_ciphers, 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH;'
     set :nginx_ssl_protocols, 'TLSv1 TLSv1.1 TLSv1.2'
     set :nginx_ssl_session_cache, 'shared:SSL:10m'
 
