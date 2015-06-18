@@ -6,7 +6,7 @@ namespace :puma do
   desc 'Test capistrano config setup'
   task :capistrano_config_test do
     raise 'Use puma is not set as the application runner' unless fetch(:use_puma)
-    raise 'puma is also set as application runner' if fetch(:use_puma)
+    raise 'Unicorn is also set as application runner' if fetch(:use_unicorn)
     raise 'Set the puma_user, which is default the deploy_user' unless fetch(:puma_user)
     raise 'Set server_domain variable to setup nginx' unless fetch(:server_domain)
   end
