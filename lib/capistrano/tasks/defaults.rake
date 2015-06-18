@@ -53,6 +53,9 @@ namespace :load do
     set :puma_worker_timeout, 30
     set :puma_min_threads, 0
     set :puma_max_threads, 16
+    set :puma_user, -> { fetch(:deploy_user) }
+    set :puma_env, ''
+    set :puma_app_env, -> { fetch(:rails_env) || fetch(:rack_env) || fetch(:stage) }
 
     # General Sidekiq settings
     set :sidekiq_workers, 3
