@@ -1,5 +1,5 @@
 <%= template_to_s('_head').to_s %>
-environment <%= fetch(:puma_app_env) %>
+environment "<%= fetch(:puma_app_env) %>"
 bind "unix:///tmp/puma.<%= fetch(:app_config_name) %>.sock"
 
 threads <%= fetch(:puma_min_threads) %>, <%= fetch(:puma_max_threads) %>

@@ -91,7 +91,7 @@ server {
   <% if fetch(:use_puma) %>
   try_files $uri/index.html $uri @puma_<%= fetch(:app_config_name) %>;
 
-  location @unicorn_<%= fetch(:app_config_name) %> {
+  location @puma_<%= fetch(:app_config_name) %> {
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header Host $http_host;
     proxy_redirect off;
