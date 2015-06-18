@@ -13,6 +13,8 @@ namespace :load do
     set :nginx_location, '/etc/nginx'
     set :nginx_redirect_www, true
     set :nginx_fail_timeout, 0
+    set :nginx_x_frame_options, 'DENY'
+    set :ngingx_strict_transport_security, true
 
     # Nginx ssl settings
     set :nginx_use_ssl, false

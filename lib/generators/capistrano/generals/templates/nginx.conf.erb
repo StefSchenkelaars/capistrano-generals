@@ -40,8 +40,8 @@ server {
 
   error_page 500 502 504 /500.html;
 
-  # SSL Settings
   <% if fetch(:nginx_use_ssl) %>
+  # SSL Settings
   listen 443 ssl;
   ssl_certificate <%= remote_ssl_cert_chained_file %>;
   ssl_certificate_key <%= remote_ssl_cert_key_file %>;
@@ -65,6 +65,13 @@ server {
   <% else %>
   listen 80;
   <% end %>
+
+  <% if fetch(:ngingx_strict_transport_security) %>
+  add_header Strict-Transport-Security max-age=63072000;
+  add_header X-Content-Type-Options nosniff;
+  <% end %>
+  add_header X-Frame-Options <%= fetch(:nginx_x_frame_options) %>;
+
 
   <% # FILE HANDLING %>
   <% if fetch(:use_unicorn) %>
