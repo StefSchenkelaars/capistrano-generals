@@ -10,7 +10,7 @@ module Capistrano
         "/etc/init.d/#{puma_service}"
       end
 
-      def unicorn_default_config_file
+      def puma_default_config_file
         shared_path.join('config/puma.rb')
       end
 
