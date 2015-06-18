@@ -16,7 +16,7 @@ APP_ROOT=<%= current_path %>
 PID=<%= fetch(:puma_pid) %>
 AS_USER=<%= fetch(:puma_user) %>
 PUMA_ENV="<%= fetch(:puma_env) %>"
-CMD="export HOME; true "${HOME:=$(getent passwd "$AS_USER" | cut -d: -f6;)}"; cd $APP_ROOT && $PUMA_ENV <%= bundle_puma('-d -C', fetch(:puma_config) %>"
+CMD="export HOME; true "${HOME:=$(getent passwd "$AS_USER" | cut -d: -f6;)}"; cd $APP_ROOT && $PUMA_ENV <%= bundle_puma('-d -C', fetch(:puma_config)) %>"
 
 set -u
 
