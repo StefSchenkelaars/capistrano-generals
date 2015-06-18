@@ -15,6 +15,7 @@ namespace :load do
     set :nginx_fail_timeout, 0
     set :nginx_x_frame_options, 'DENY'
     set :ngingx_strict_transport_security, true
+    set :nginx_respond_to_subdomains, false
 
     # Nginx ssl settings
     set :nginx_use_ssl, false
@@ -44,6 +45,18 @@ namespace :load do
     set :unicorn_user, -> { fetch(:deploy_user) }
     set :unicorn_env, ''
     set :unicorn_app_env, -> { fetch(:rails_env) || fetch(:rack_env) || fetch(:stage) }
+
+    # General Puma settings
+    set :puma_preload_app, true
+    set :puma_pid, -> { puma_default_pid_file } # shared_path/tmp/pids/puma.pid
+    set :puma_config, -> { puma_default_config_file } # shared_path/config/puma.rb
+    set :puma_workers, 2
+    set :puma_worker_timeout, 30
+    set :puma_min_threads, 0
+    set :puma_max_threads, 16
+    set :puma_user, -> { fetch(:deploy_user) }
+    set :puma_env, ''
+    set :puma_app_env, -> { fetch(:rails_env) || fetch(:rack_env) || fetch(:stage) }
 
     # General Sidekiq settings
     set :sidekiq_workers, 3

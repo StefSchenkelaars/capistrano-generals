@@ -10,6 +10,10 @@ module Capistrano
         SSHKit::Command.new(:bundle, :exec, :sidekiq, args).to_command
       end
 
+      def bundle_puma(*args)
+        SSHKit::Command.new(:bundle, :exec, :puma, args).to_command
+      end
+
       def red text
         "\033[31m#{text}\033[0m"
       end

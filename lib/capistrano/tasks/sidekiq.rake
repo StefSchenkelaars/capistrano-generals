@@ -13,43 +13,56 @@ namespace :sidekiq do
     on roles :app do
       sudo_upload! template('sidekiq_init.sh'), sidekiq_initd_file
       execute :chmod, '+x', sidekiq_initd_file
-      sudo 'update-rc.d', '-f', unicorn_service, 'defaults'
+      sudo 'update-rc.d', '-f', sidekiq_service, 'defaults'
     end
   end
   before :setup_initializer, :capistrano_config_test
 
-  desc 'Start sidekiq'
-  task :start do
-    on roles(:app) do
-      execute "sudo /etc/init.d/sidekiq_#{fetch(:application)}_#{fetch(:stage)} start"
+  desc 'Setup Sidekiq'
+  task :setup do
+    if fetch :use_sidekiq
+      invoke 'sidekiq:setup_initializer'
     end
   end
 
+  desc 'Start sidekiq'
+  task :start do
+    on roles :app do
+      sudo sidekiq_initd_file, 'start'
+    end
+  end
+  before :start, :capistrano_config_test
+
   desc 'Stop sidekiq'
   task :stop do
-    on roles(:app) do
-      execute "sudo /etc/init.d/sidekiq_#{fetch(:application)}_#{fetch(:stage)} stop"
+    on roles :app do
+      sudo sidekiq_initd_file, 'stop'
       sleep 8
     end
   end
+  before :stop, :capistrano_config_test
 
   desc 'Restart sidekiq'
   task :restart do
     invoke 'sidekiq:stop'
     invoke 'sidekiq:start'
   end
+  before :restart, :capistrano_config_test
+
+  desc 'Restarts sidekiq if sidekiq enabled'
+  task :after_publishing do
+    if fetch :use_sidekiq
+      invoke 'sidekiq:restart'
+    end
+  end
 
 end
 
 namespace :deploy do
-  if fetch(:use_sidekiq)
-    after :publishing, 'sidekiq:restart'
-  end
+  after :publishing, 'sidekiq:after_publishing'
 end
 
 desc 'Server setup tasks'
 task :setup do
-  if fetch(:use_sidekiq)
-    invoke 'unicorn:setup_initializer'
-  end
+  invoke 'sidekiq:setup'
 end
