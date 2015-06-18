@@ -20,14 +20,8 @@ CMD="export HOME; true "${HOME:=$(getent passwd "$AS_USER" | cut -d: -f6;)}"; cd
 
 set -u
 
-OLD_PIN="$PID.oldbin"
-
 sig () {
   test -s "$PID" && kill -$1 `cat $PID`
-}
-
-oldsig () {
-  test -s $OLD_PIN && kill -$1 `cat $OLD_PIN`
 }
 
 run () {
