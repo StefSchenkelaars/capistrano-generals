@@ -24,7 +24,7 @@ server {
 <% if fetch(:nginx_use_ssl) %>
 server {
   listen 80;
-  server_name <%= fetch(:server_domain) %>;
+  server_name <%= "*.#{fetch(:server_domain)}" if fetch(:nginx_respond_to_subdomains) %> <%= fetch(:server_domain) %>;
   rewrite ^(.*) https://$host$1 permanent;
 }
 <% end %>
@@ -32,7 +32,7 @@ server {
 #          Server
 ##############################
 server {
-  server_name <%= fetch(:server_domain) %>;
+  server_name <%= "*.#{fetch(:server_domain)}" if fetch(:nginx_respond_to_subdomains) %> <%= fetch(:server_domain) %>;
   root <%= current_path %>/public;
 
   client_max_body_size 4G;
@@ -99,7 +99,7 @@ server {
     proxy_set_header X-Forwarded-Proto https;
     <% end %>
     proxy_pass http://puma_<%= fetch(:app_config_name) %>;
-    }
+  }
   <% end %>
 
   location ~* ^/assets/ {

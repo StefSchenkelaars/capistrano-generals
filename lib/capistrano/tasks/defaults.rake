@@ -15,6 +15,7 @@ namespace :load do
     set :nginx_fail_timeout, 0
     set :nginx_x_frame_options, 'DENY'
     set :ngingx_strict_transport_security, true
+    set :nginx_respond_to_subdomains, false
 
     # Nginx ssl settings
     set :nginx_use_ssl, false
