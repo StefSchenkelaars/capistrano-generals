@@ -30,12 +30,21 @@ namespace :puma do
   end
   before :setup_app_config, :capistrano_config_test
 
+  desc 'Setup puma'
+  task :setup do
+    if fetch(:use_puma)
+      invoke 'puma:setup_initializer'
+      invoke 'puma:setup_app_config'
+    end
+  end
+
   desc 'Start puma'
   task :start do
     on roles :app do
       sudo puma_initd_file, 'start'
     end
   end
+  before :start, :capistrano_config_test
 
   desc 'Stop puma'
   task :stop do
@@ -44,25 +53,18 @@ namespace :puma do
       sleep 3
     end
   end
+  before :stop, :capistrano_config_test
 
   desc 'Restart puma'
   task :restart do
     invoke 'puma:stop'
     invoke 'puma:start'
   end
+  before :restart, :capistrano_config_test
 
-end
-
-namespace :deploy do
-  if fetch(:use_puma)
-    after :publishing, 'puma:restart'
-  end
 end
 
 desc 'Server setup tasks'
 task :setup do
-  if fetch(:use_puma)
-    invoke 'puma:setup_app_config'
-    invoke 'puma:setup_initializer'
-  end
+  invoke 'puma:setup'
 end

@@ -13,9 +13,10 @@ worker_timeout <%= fetch(:puma_worker_timeout) %>
 
 on_worker_boot do
   if defined? ActiveSupport
-  ActiveSupport.on_load(:active_record) do
-    if defined? ActiveRecord::Base
-      ActiveRecord::Base.establish_connection
+    ActiveSupport.on_load(:active_record) do
+      if defined? ActiveRecord::Base
+        ActiveRecord::Base.establish_connection
+      end
     end
   end
 end

@@ -18,12 +18,20 @@ namespace :sidekiq do
   end
   before :setup_initializer, :capistrano_config_test
 
+  desc 'Setup Sidekiq'
+  task :setup do
+    if fetch(:use_sidekiq)
+      invoke 'sidekiq:setup_initializer'
+    end
+  end
+
   desc 'Start sidekiq'
   task :start do
     on roles(:app) do
       sudo sidekiq_initd_file, 'start'
     end
   end
+  before :start, :capistrano_config_test
 
   desc 'Stop sidekiq'
   task :stop do
@@ -32,24 +40,18 @@ namespace :sidekiq do
       sleep 8
     end
   end
+  before :stop, :capistrano_config_test
 
   desc 'Restart sidekiq'
   task :restart do
     invoke 'sidekiq:stop'
     invoke 'sidekiq:start'
   end
+  before :restart, :capistrano_config_test
 
-end
-
-namespace :deploy do
-  if fetch(:use_sidekiq)
-    after :publishing, 'sidekiq:restart'
-  end
 end
 
 desc 'Server setup tasks'
 task :setup do
-  if fetch(:use_sidekiq)
-    invoke 'sidekiq:setup_initializer'
-  end
+  invoke 'sidekiq:setup'
 end

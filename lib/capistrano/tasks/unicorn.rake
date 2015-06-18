@@ -3,14 +3,12 @@ include Capistrano::DSL::UnicornPaths
 
 namespace :unicorn do
 
-  on :start do
-    # Test capistrano config setup
-    if fetch(:use_unicorn)
-      # raise 'Use unicorn is not set as the application runner' unless fetch(:use_unicorn)
-      raise 'Puma is also set as application runner' if fetch(:use_puma)
-      raise 'Set the unicorn_user, which is default the deploy_user' unless fetch(:unicorn_user)
-      raise 'Set server_domain variable to setup nginx' unless fetch(:server_domain)
-    end
+  desc 'Test capistrano config setup'
+  task :capistrano_config_test do
+    raise 'Use unicorn is not set as the application runner' unless fetch(:use_unicorn)
+    raise 'Puma is also set as application runner' if fetch(:use_puma)
+    raise 'Set the unicorn_user, which is default the deploy_user' unless fetch(:unicorn_user)
+    raise 'Set server_domain variable to setup nginx' unless fetch(:server_domain)
   end
 
   desc 'Setup Unicorn initializer'
@@ -21,12 +19,22 @@ namespace :unicorn do
       sudo 'update-rc.d', '-f', unicorn_service, 'defaults'
     end
   end
+  before :setup_initializer, :capistrano_config_test
 
   desc 'Setup unicorn app configuration'
   task :setup_app_config do
     on roles :app do
       execute :mkdir, '-pv', File.dirname(fetch(:unicorn_config).to_s)
       upload! template('unicorn.rb'), fetch(:unicorn_config).to_s
+    end
+  end
+  before :setup_app_config, :capistrano_config_test
+
+  desc 'Setup unicorn'
+  task :setup do
+    if fetch(:use_unicorn)
+      invoke 'unicorn:setup_app_config'
+      invoke 'unicorn:setup_initializer'
     end
   end
 
@@ -36,6 +44,7 @@ namespace :unicorn do
       sudo unicorn_initd_file, 'start'
     end
   end
+  before :start, :capistrano_config_test
 
   desc 'Stop unicorn'
   task :stop do
@@ -44,25 +53,18 @@ namespace :unicorn do
       sleep 3
     end
   end
+  before :stop, :capistrano_config_test
 
   desc 'Restart unicorn'
   task :restart do
     invoke 'unicorn:stop'
     invoke 'unicorn:start'
   end
+  before :restart, :capistrano_config_test
 
-end
-
-namespace :deploy do
-  if fetch(:use_unicorn)
-    after :publishing, 'unicorn:restart'
-  end
 end
 
 desc 'Server setup tasks'
 task :setup do
-  if fetch(:use_unicorn)
-    invoke 'unicorn:setup_app_config'
-    invoke 'unicorn:setup_initializer'
-  end
+  invoke 'unicorn:setup'
 end
