@@ -32,7 +32,7 @@ namespace :puma do
 
   desc 'Setup puma'
   task :setup do
-    if fetch(:use_puma)
+    if fetch :use_puma
       invoke 'puma:setup_initializer'
       invoke 'puma:setup_app_config'
     end
@@ -62,6 +62,17 @@ namespace :puma do
   end
   before :restart, :capistrano_config_test
 
+  desc 'Restarts puma if puma enabled'
+  task :after_publishing do
+    if fetch :use_puma
+      invoke 'puma:restart'
+    end
+  end
+
+end
+
+namespace :deploy do
+  after :publishing, 'puma:after_publishing'
 end
 
 desc 'Server setup tasks'

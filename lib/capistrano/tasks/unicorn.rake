@@ -62,6 +62,17 @@ namespace :unicorn do
   end
   before :restart, :capistrano_config_test
 
+  desc 'Restarts unicorn if puma enabled'
+  task :after_publishing do
+    if fetch :use_unicorn
+      invoke 'unicorn:restart'
+    end
+  end
+
+end
+
+namespace :deploy do
+  after :publishing, 'unicorn:after_publishing'
 end
 
 desc 'Server setup tasks'

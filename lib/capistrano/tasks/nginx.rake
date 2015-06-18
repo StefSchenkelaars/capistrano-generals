@@ -54,7 +54,7 @@ namespace :nginx do
 end
 
 namespace :deploy do
-  after :publishing, 'nginx:reload'
+  after :publishing, 'nginx:restart'
 end
 
 desc 'Server setup tasks'
