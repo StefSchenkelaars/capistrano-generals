@@ -13,7 +13,7 @@ namespace :sidekiq do
     on roles :app do
       sudo_upload! template('sidekiq_init.sh'), sidekiq_initd_file
       execute :chmod, '+x', sidekiq_initd_file
-      sudo 'update-rc.d', '-f', unicorn_service, 'defaults'
+      sudo 'update-rc.d', '-f', sidekiq_service, 'defaults'
     end
   end
   before :setup_initializer, :capistrano_config_test
@@ -21,14 +21,14 @@ namespace :sidekiq do
   desc 'Start sidekiq'
   task :start do
     on roles(:app) do
-      execute "sudo /etc/init.d/sidekiq_#{fetch(:application)}_#{fetch(:stage)} start"
+      sudo sidekiq_initd_file, 'start'
     end
   end
 
   desc 'Stop sidekiq'
   task :stop do
     on roles(:app) do
-      execute "sudo /etc/init.d/sidekiq_#{fetch(:application)}_#{fetch(:stage)} stop"
+      sudo sidekiq_initd_file, 'stop'
       sleep 8
     end
   end
@@ -50,6 +50,6 @@ end
 desc 'Server setup tasks'
 task :setup do
   if fetch(:use_sidekiq)
-    invoke 'unicorn:setup_initializer'
+    invoke 'sidekiq:setup_initializer'
   end
 end

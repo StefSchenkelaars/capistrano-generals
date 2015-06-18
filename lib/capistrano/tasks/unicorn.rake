@@ -3,12 +3,14 @@ include Capistrano::DSL::UnicornPaths
 
 namespace :unicorn do
 
-  desc 'Test capistrano config setup'
-  task :capistrano_config_test do
-    raise 'Use unicorn is not set as the application runner' unless fetch(:use_unicorn)
-    raise 'Puma is also set as application runner' if fetch(:use_puma)
-    raise 'Set the unicorn_user, which is default the deploy_user' unless fetch(:unicorn_user)
-    raise 'Set server_domain variable to setup nginx' unless fetch(:server_domain)
+  on :start do
+    # Test capistrano config setup
+    if fetch(:use_unicorn)
+      # raise 'Use unicorn is not set as the application runner' unless fetch(:use_unicorn)
+      raise 'Puma is also set as application runner' if fetch(:use_puma)
+      raise 'Set the unicorn_user, which is default the deploy_user' unless fetch(:unicorn_user)
+      raise 'Set server_domain variable to setup nginx' unless fetch(:server_domain)
+    end
   end
 
   desc 'Setup Unicorn initializer'
@@ -19,7 +21,6 @@ namespace :unicorn do
       sudo 'update-rc.d', '-f', unicorn_service, 'defaults'
     end
   end
-  before :setup_initializer, :capistrano_config_test
 
   desc 'Setup unicorn app configuration'
   task :setup_app_config do
@@ -28,7 +29,6 @@ namespace :unicorn do
       upload! template('unicorn.rb'), fetch(:unicorn_config).to_s
     end
   end
-  before :setup_app_config, :capistrano_config_test
 
   desc 'Start unicorn'
   task :start do
