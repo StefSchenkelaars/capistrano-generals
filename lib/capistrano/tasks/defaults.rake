@@ -39,8 +39,8 @@ namespace :load do
     set :unicorn_config, -> { unicorn_default_config_file } # shared_path/config/unicorn.rb
     set :unicorn_workers, 2
     set :unicorn_worker_timeout, 30
-    set :unicorn_log, 'unicorn.stdout.log'
-    set :unicorn_error_log, 'unicorn.stderr.log'
+    set :unicorn_log, 'unicorn.log'
+    set :unicorn_error_log, 'unicorn.log'
     set :unicorn_user, -> { fetch(:deploy_user) }
     set :unicorn_env, ''
     set :unicorn_app_env, -> { fetch(:rails_env) || fetch(:rack_env) || fetch(:stage) }
