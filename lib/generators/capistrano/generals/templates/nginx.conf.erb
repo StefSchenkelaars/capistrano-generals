@@ -18,7 +18,11 @@ upstream puma_<%= fetch(:app_config_name) %> {
 server {
   listen 80;
   server_name www.<%= fetch(:server_domain) %>;
+  <% if fetch(:nginx_use_ssl) %>
   return 301 https://<%= fetch(:server_domain) %>$request_uri;
+  <% else %>
+  return 301 http://<%= fetch(:server_domain) %>$request_uri;
+  <% end %>
 }
 <% end %>
 <% if fetch(:nginx_use_ssl) %>
