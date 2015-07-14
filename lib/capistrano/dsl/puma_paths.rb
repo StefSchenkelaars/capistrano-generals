@@ -17,6 +17,18 @@ module Capistrano
       def puma_default_pid_file
         shared_path.join('tmp/pids/puma.pid')
       end
+
+      def puma_log_dir
+        shared_path.join('log')
+      end
+
+      def puma_log_file
+        puma_log_dir.join(fetch(:puma_log))
+      end
+
+      def puma_error_log_file
+        puma_log_dir.join(fetch(:puma_error_log))
+      end
     end
   end
 end

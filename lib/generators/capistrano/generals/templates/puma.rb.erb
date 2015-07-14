@@ -10,6 +10,7 @@ pidfile "<%= fetch(:puma_pid) %>"
 preload_app!
 <% end %>
 
+stdout_redirect "<%= puma_log_file %>", "<%= puma_error_log_file %>", true
 worker_timeout <%= fetch(:puma_worker_timeout) %>
 
 on_worker_boot do
