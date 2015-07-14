@@ -50,6 +50,8 @@ namespace :load do
     set :puma_preload_app, true
     set :puma_pid, -> { puma_default_pid_file } # shared_path/tmp/pids/puma.pid
     set :puma_config, -> { puma_default_config_file } # shared_path/config/puma.rb
+    set :puma_log, 'puma.log'
+    set :puma_error_log, 'puma.log'
     set :puma_workers, 2
     set :puma_worker_timeout, 30
     set :puma_min_threads, 0
