@@ -19,9 +19,9 @@ server {
   listen 80;
   server_name www.<%= fetch(:server_domain) %>;
   <% if fetch(:nginx_use_ssl) %>
-  return 301 https://<%= fetch(:server_domain) %>$request_uri;
+  return 302 https://<%= fetch(:server_domain) %>$request_uri;
   <% else %>
-  return 301 http://<%= fetch(:server_domain) %>$request_uri;
+  return 302 http://<%= fetch(:server_domain) %>$request_uri;
   <% end %>
 }
 <% end %>
@@ -29,7 +29,7 @@ server {
 server {
   listen 80;
   server_name <%= "*.#{fetch(:server_domain)}" if fetch(:nginx_respond_to_subdomains) %> <%= fetch(:server_domain) %>;
-  rewrite ^(.*) https://$host$1 permanent;
+  return 302 https://<%= fetch(:server_domain) %>$request_uri;
 }
 <% end %>
 
@@ -38,6 +38,8 @@ server {
 server {
   server_name <%= "*.#{fetch(:server_domain)}" if fetch(:nginx_respond_to_subdomains) %> <%= fetch(:server_domain) %>;
   root <%= current_path %>/public;
+
+  <%= fetch(:nginx_custom_block) %>
 
   client_max_body_size 4G;
   keepalive_timeout 10;
@@ -57,8 +59,11 @@ server {
   <% if fetch(:nginx_ssl_stapling) %>
   ssl_stapling on;
   ssl_stapling_verify on;
-  resolver 8.8.4.4 8.8.8.8 valid=300s;
-  resolver_timeout 10s;
+  <% end %>
+
+  <% if fetch(:nginx_resolver).length > 0 %>
+  resolver <%= fetch(:nginx_resolver) %>;
+  resolver_timeout <%= fetch(:nginx_resolver_timeout) %>;
   <% end %>
 
   <% if fetch(:ssl_server_ciphers) %>
@@ -110,17 +115,18 @@ server {
   }
   <% end %>
 
-  location ~* ^/assets/ {
-    # Per RFC2616 - 1 year maximum expiry
-    expires 1y;
+  <% if fetch(:cache_static_files) %>
+  location ~* \.(?:jpg|jpeg|gif|png|ico|cur|gz|svg|svgz|mp4|ogg|ogv|webm|htc|css|js)$ {
+    expires max;
     add_header Cache-Control public;
-
-    # Some browsers still send conditional-GET requests if there's a
-    # Last-Modified header or an ETag header even if they haven't
-    # reached the expiry date sent in the Expires header.
-    add_header Last-Modified "";
-    add_header ETag "";
-    break;
   }
+  <% end %>
+
+  <% if fetch(:cache_custom).length > 0 %>
+  location <%= fetch(:cache_custom) %> {
+    expires <%= fetch(:cache_custom_expire) %>;
+    add_header Cache-Control public;
+  }
+  <% end %>
 
 }

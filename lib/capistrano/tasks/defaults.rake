@@ -14,8 +14,11 @@ namespace :load do
     set :nginx_redirect_www, true
     set :nginx_fail_timeout, 0
     set :nginx_x_frame_options, 'DENY'
-    set :ngingx_strict_transport_security, true
+    set :ngingx_strict_transport_security, false
     set :nginx_respond_to_subdomains, false
+    set :nginx_resolver, '8.8.4.4 8.8.8.8 valid=300s'
+    set :nginx_resolver_timeout, '10s'
+    set :nginx_custom_block, ''
 
     # Nginx ssl settings
     set :nginx_use_ssl, false
@@ -23,6 +26,11 @@ namespace :load do
     set :nginx_ssl_ciphers, 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH'
     set :nginx_ssl_protocols, 'TLSv1 TLSv1.1 TLSv1.2'
     set :nginx_ssl_session_cache, 'shared:SSL:10m'
+
+    # Nginx caching settings
+    set :cache_static_files, true
+    set :cache_custom, ''
+    set :cache_custom_expire, 'max'
 
     # SSL Settings
     set :local_certs_folder, 'config/deploy/certs'
