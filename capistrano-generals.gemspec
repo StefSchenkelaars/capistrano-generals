@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["stef.schenkelaars@gmail.com"]
   spec.summary       = "Some general capistrano tasks which are commonly used"
   spec.description   = "Some general capistrano tasks which are commonly used"
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/StefSchenkelaars/capistrano-generals"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")

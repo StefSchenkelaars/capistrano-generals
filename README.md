@@ -1,7 +1,6 @@
 # Capistrano::Generals
 
-Capistrano tasks that are used quite often.
-Push your code to git, upload stage specific config files.
+Let capistrano take care of all your server setup. Upload stage specific config files and automated setup of nxing, puma, unicorn and sidekiq.
 
 ## Installation
 
@@ -18,6 +17,10 @@ And then execute:
 
     $ bundle install
 
+Create the capistrano `Capfile` if neccecary:
+
+    $ bundle exec cap install
+
 And add this to the `Capfile`:
 
 ```ruby
@@ -33,13 +36,6 @@ namespace :deploy do
   before :deploy,   'git:push'
   before :deploy,   'deploy:symlink:upload_linked_files'
   before :deploy,   'setup'
-
-  # after  :deploy,   'unicorn:restart'
-  # after  :rollback, 'unicorn:restart'
-  # after  :deploy,   'nginx:restart'
-  # after  :rollback, 'nginx:restart'
-  # after  :deploy,   'sidekiq:restart'
-  # after  :rollback, 'sidekiq:restart'
 end
 ```
 
