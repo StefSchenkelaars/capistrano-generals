@@ -84,7 +84,9 @@ server {
   listen 80;
   <% end %>
 
+  <% if fetch(:nginx_x_frame_options) %>
   add_header X-Frame-Options <%= fetch(:nginx_x_frame_options) %>;
+  <% end %>
 
   <% # FILE HANDLING %>
   <% if fetch(:use_unicorn) %>
