@@ -29,7 +29,7 @@ server {
 server {
   listen 80;
   server_name <%= "*.#{fetch(:server_domain)}" if fetch(:nginx_respond_to_subdomains) %> <%= fetch(:server_domain) %>;
-  return 302 https://<%= fetch(:server_domain) %>$request_uri;
+  return 302 https://$host$request_uri;
 }
 <% end %>
 
