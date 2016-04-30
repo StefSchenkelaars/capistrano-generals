@@ -19,6 +19,8 @@ namespace :load do
     set :nginx_resolver, '8.8.4.4 8.8.8.8 valid=300s'
     set :nginx_resolver_timeout, '10s'
     set :nginx_custom_block, ''
+    set :nginx_max_body_size, '4G'
+    set :nginx_keep_alive_timeout, '10'
 
     # Nginx ssl settings
     set :nginx_use_ssl, false
@@ -28,7 +30,8 @@ namespace :load do
     set :nginx_ssl_session_cache, 'shared:SSL:10m'
 
     # Nginx caching settings
-    set :cache_static_files, true
+    set :cache_all_static_files, false
+    set :cache_assets_folder, true
     set :cache_custom, ''
     set :cache_custom_expire, 'max'
 
@@ -67,6 +70,12 @@ namespace :load do
     set :puma_user, -> { fetch(:deploy_user) }
     set :puma_env, ''
     set :puma_app_env, -> { fetch(:rails_env) || fetch(:rack_env) || fetch(:stage) }
+
+    # Puma Worker Killer settings
+    set :puma_worker_killer_ram, 512 # mb
+    set :puma_worker_killer_frequency, 10 #seconds
+    set :puma_worker_killer_percent_usage, 0.99 # percent of RAM to use
+    set :puma_worker_killer_rolling_restart_frequency, 6*3600 # 6 hours in seconds
 
     # General Sidekiq settings
     set :sidekiq_workers, 3

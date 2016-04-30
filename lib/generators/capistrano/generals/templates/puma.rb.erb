@@ -22,3 +22,15 @@ on_worker_boot do
     end
   end
 end
+
+before_fork do
+  if defined? PumaWorkerKiller
+    PumaWorkerKiller.config do |config|
+      config.ram           = <%= fetch(:puma_worker_killer_ram) %>
+      config.frequency     = <%= fetch(:puma_worker_killer_frequency) %>
+      config.percent_usage = <%= fetch(:puma_worker_killer_percent_usage) %>
+      config.rolling_restart_frequency = <%= fetch(:puma_worker_killer_rolling_restart_frequency) %>
+    end
+    PumaWorkerKiller.start
+  end
+end
