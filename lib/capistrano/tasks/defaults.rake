@@ -68,6 +68,12 @@ namespace :load do
     set :puma_env, ''
     set :puma_app_env, -> { fetch(:rails_env) || fetch(:rack_env) || fetch(:stage) }
 
+    # Puma Worker Killer settings
+    set :puma_worker_killer_ram, 512 # mb
+    set :puma_worker_killer_frequency, 10 #seconds
+    set :puma_worker_killer_percent_usage, 0.99 # percent of RAM to use
+    set :puma_worker_killer_rolling_restart_frequency, 6*3600 # 6 hours in seconds
+
     # General Sidekiq settings
     set :sidekiq_workers, 3
     set :sidekiq_user, -> { fetch(:deploy_user) }
