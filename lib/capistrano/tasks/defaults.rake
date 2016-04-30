@@ -19,6 +19,8 @@ namespace :load do
     set :nginx_resolver, '8.8.4.4 8.8.8.8 valid=300s'
     set :nginx_resolver_timeout, '10s'
     set :nginx_custom_block, ''
+    set :nginx_max_body_size, '4G'
+    set :nginx_keep_alive_timeout, '10'
 
     # Nginx ssl settings
     set :nginx_use_ssl, false
@@ -28,7 +30,8 @@ namespace :load do
     set :nginx_ssl_session_cache, 'shared:SSL:10m'
 
     # Nginx caching settings
-    set :cache_static_files, true
+    set :cache_all_static_files, false
+    set :cache_assets_folder, true
     set :cache_custom, ''
     set :cache_custom_expire, 'max'
 

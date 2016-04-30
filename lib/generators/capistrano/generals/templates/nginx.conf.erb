@@ -41,8 +41,8 @@ server {
 
   <%= fetch(:nginx_custom_block) %>
 
-  client_max_body_size 4G;
-  keepalive_timeout 10;
+  client_max_body_size <%= fetch(:nginx_max_body_size) %>;
+  keepalive_timeout <%= fetch(:nginx_keep_alive_timeout) %>;
 
   error_page 500 502 504 /500.html;
 
@@ -117,8 +117,15 @@ server {
   }
   <% end %>
 
-  <% if fetch(:cache_static_files) %>
+  <% if fetch(:cache_all_static_files) %>
   location ~* \.(?:jpg|jpeg|gif|png|ico|cur|gz|svg|svgz|mp4|ogg|ogv|webm|htc|css|js)$ {
+    expires max;
+    add_header Cache-Control public;
+  }
+  <% end %>
+
+  <% if fetch(:cache_assets_folder) %>
+  location ~* ^/assets/ {
     expires max;
     add_header Cache-Control public;
   }
