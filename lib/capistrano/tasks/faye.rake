@@ -31,6 +31,7 @@ namespace :faye do
   task :setup do
     if fetch :use_faye
       invoke 'faye:setup_initializer'
+      invoke 'faye:setup_app_config'
     end
   end
 
