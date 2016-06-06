@@ -88,6 +88,22 @@ server {
   add_header X-Frame-Options <%= fetch(:nginx_x_frame_options) %>;
   <% end %>
 
+
+  <% if fetch(:use_faye) %>
+  # Add acception of websockets for faye
+  location <%= fetch(:faye_mount_location) %> {
+    proxy_set_header   Upgrade $http_upgrade;
+    proxy_set_header   Connection "upgrade";
+    proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header   X-Real-IP  $remote_addr;
+    proxy_set_header   Host $host;
+    proxy_http_version 1.1;
+    proxy_buffering    off;
+    proxy_redirect     off;
+    proxy_pass         http://localhost:<%= fetch(:faye_port) %>;
+  }
+  <% end %>
+
   <% # FILE HANDLING %>
   <% if fetch(:use_unicorn) %>
   try_files $uri/index.html $uri @unicorn_<%= fetch(:app_config_name) %>;
