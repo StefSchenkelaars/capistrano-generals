@@ -1,0 +1,12 @@
+<%= template_to_s('_head').to_s %>
+<% if fetch(:faye_require) %>
+require '<%= fetch(:faye_require) %>'
+<% end %>
+
+Faye.logger = Logger.new('<%= faye_log_file %>', <%= fetch(:faye_max_log_files) %>, <%= fetch(:faye_max_log_size) %>*1e6) # Max 3 files of 100 MB
+
+bayeux = Faye::RackAdapter.new mount: '<%= fetch(:faye_mount_location) %>', timeout: <%= fetch(:faye_timeout) %>
+<% for extension in fetch(:faye_extensions) %>
+bayeux.add_extension(<%= extension %>)
+<% end %>
+run bayeux

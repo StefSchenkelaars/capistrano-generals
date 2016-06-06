@@ -74,7 +74,7 @@ namespace :load do
     # Puma Worker Killer settings
     set :puma_worker_killer_ram, 512 # mb
     set :puma_worker_killer_frequency, 10 #seconds
-    set :puma_worker_killer_percent_usage, 0.99 # percent of RAM to use
+    set :puma_worker_killer_percent_usage, 0.95 # percent of RAM to use
     set :puma_worker_killer_rolling_restart_frequency, 6*3600 # 6 hours in seconds
 
     # General Sidekiq settings
@@ -82,6 +82,19 @@ namespace :load do
     set :sidekiq_user, -> { fetch(:deploy_user) }
     set :sidekiq_pid, -> { sidekiq_default_pid_file }
     set :sidekiq_log, 'sidekiq.log'
+
+    # General Faye settings
+    set :faye_mount_location, '/faye'
+    set :faye_timeout, 25
+    set :faye_port, 9292
+    set :faye_extensions, []
+    set :faye_require, -> { faye_default_require }
+    set :faye_user, -> { fetch(:deploy_user) }
+    set :faye_pid, -> { faye_default_pid_file }
+    set :faye_log, 'faye.log'
+    set :faye_max_log_files, 3
+    set :faye_max_log_size, 100 # in mb
+    set :faye_config, -> { faye_default_config_file } # shared_path/config/faye.ru
 
     # Capistrano settings
     set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids')
