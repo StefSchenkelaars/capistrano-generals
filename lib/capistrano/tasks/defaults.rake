@@ -85,6 +85,7 @@ namespace :load do
 
     # General Faye settings
     set :faye_mount_location, '/faye'
+    set :faye_server, 'thin'
     set :faye_timeout, 25
     set :faye_port, 9292
     set :faye_extensions, []

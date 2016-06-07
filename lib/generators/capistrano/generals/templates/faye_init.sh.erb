@@ -16,7 +16,8 @@ APP_ROOT=<%= current_path %>
 FAYE_CONF=<%= fetch(:faye_config) %>
 PID=<%= fetch(:faye_pid) %>
 PORT=<%= fetch(:faye_port) %>
-CMD="cd <%= current_path %>; bundle exec rackup $FAYE_CONF -E production -D --pid $PID -p $PORT"
+SERVER=<%= fetch(:faye_server) %>
+CMD="cd <%= current_path %>; bundle exec rackup $FAYE_CONF -E production -D --pid $PID -p $PORT -s $SERVER"
 
 set -u
 
