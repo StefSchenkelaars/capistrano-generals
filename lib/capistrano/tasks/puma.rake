@@ -16,7 +16,7 @@ namespace :puma do
     on roles :app do
       sudo_upload! template('puma_init.sh'), puma_initd_file
       execute :chmod, '+x', puma_initd_file
-      sudo 'update-rc.d', '-f', puma_service, 'defaults'
+      sudo 'update-rc.d', '-f', puma_service, 'defaults 50 50'
     end
   end
   before :setup_initializer, :capistrano_config_test
